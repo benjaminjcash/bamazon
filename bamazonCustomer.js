@@ -56,17 +56,21 @@ function newPurchase() {
                 if (err) throw err;
                 var currentQuantity = res[0].stock_quantity;
                 if (quantityRequested > currentQuantity) {
+                    console.log("........\n");
                     console.log("Sorry, we don't have enough in stock!");
-                    connection.end();                    
+                    console.log("........\n");
+                    newPurchase();                  
                 } else {
                     connection.query("UPDATE products SET ? WHERE ?", [{stock_quantity: currentQuantity - quantityRequested}, {item_id: productId}], function (err, res) {
                         if (err) throw err;
                         connection.query("SELECT price FROM products WHERE ?", {item_id: productId}, function (err, res) {
                             if (err) throw err;
                             var cost = res[0].price * quantityRequested;
+                            console.log("........\n");
                             console.log("That will be $" + cost);
-                            console.log("Your order is complete")
-                            connection.end();
+                            console.log("Your order is complete");
+                            console.log("........\n");
+                            newPurchase();
                         })
                     })
                 }  
